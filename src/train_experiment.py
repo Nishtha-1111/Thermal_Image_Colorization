@@ -184,6 +184,16 @@ def train(cfg_path: str, resume_path: str = None):
     best_val_loss = float("inf")
 
     # Resume from checkpoint if requested
+    if resume_path == "auto" or (resume_path is not None and not os.path.exists(resume_path)):
+        # Auto-detect latest checkpoint or best_model
+        if (ckpt_dir / "checkpoint_latest.pth").exists():
+            resume_path = str(ckpt_dir / "checkpoint_latest.pth")
+        elif (ckpt_dir / "best_model.pth").exists():
+            resume_path = str(ckpt_dir / "best_model.pth")
+        else:
+            ckpts = sorted(ckpt_dir.glob("checkpoint_epoch*.pth"))
+            resume_path = str(ckpts[-1]) if ckpts else None
+
     if resume_path and os.path.exists(resume_path):
         logger.info(f"Resuming from checkpoint: {resume_path}")
         ckpt = torch.load(resume_path, map_location=device)
@@ -196,6 +206,7 @@ def train(cfg_path: str, resume_path: str = None):
         for _ in range(start_epoch - 1):
             schedG.step()
             schedD.step()
+        logger.info(f"Resumed at epoch {start_epoch} (best_val_loss: {best_val_loss:.4f})")
 
     # 4. Training Loop
     sample_every = cfg["training"].get("sample_every", 500)
@@ -307,6 +318,18 @@ def train(cfg_path: str, resume_path: str = None):
             }, str(best_path))
             logger.info(f"  ★ New best model saved -> {best_path.name} (val_total: {best_val_loss:.4f})")
 
+        # Save Latest Checkpoint (ensures zero progress lost if interrupted)
+        latest_path = ckpt_dir / "checkpoint_latest.pth"
+        torch.save({
+            "epoch": epoch,
+            "netG": netG.state_dict(),
+            "netD": netD.state_dict(),
+            "optG": optG.state_dict(),
+            "optD": optD.state_dict(),
+            "best_val_loss": best_val_loss,
+            "config": cfg,
+        }, str(latest_path))
+
         # Save Periodic Checkpoint
         if epoch % save_every == 0 or epoch == total_epochs:
             ckpt_path = ckpt_dir / f"checkpoint_epoch{epoch:04d}.pth"
@@ -336,7 +359,8 @@ if __name__ == "__main__":
     parser.add_argument("--config", type=str, default=None, help="Path to experiment YAML config")
     parser.add_argument("--exp", type=str, default=None, choices=["E1", "E2", "E3", "E4"],
                         help="Experiment shortcut (E1, E2, E3, or E4)")
-    parser.add_argument("--resume", type=str, default=None, help="Path to checkpoint to resume training")
+    parser.add_argument("--resume", nargs="?", const="auto", default=None,
+                        help="Path to checkpoint to resume training (or omit path to auto-detect latest/best)")
     args = parser.parse_args()
 
     config_map = {
