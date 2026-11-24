@@ -1,0 +1,39 @@
+# Experiment E1: Baseline (Original U-Net, IR + Canny input, No Sobel loss)
+experiment:
+  id: "E1"
+  name: "E1_baseline"
+  description: "Original U-Net baseline with IR + Canny input and no Sobel loss"
+  generator_type: "original_unet"   # original_unet | gated_unet
+  in_channels_G: 2
+  out_channels_G: 3
+  ngf: 64
+  use_sobel_loss: false
+
+dataset:
+  pairs_csv: "datasets/llvip_pairs.csv"
+  annotations: "LLVIP/Annotations"
+  image_size: [256, 256]
+  num_workers: 4
+
+training:
+  batch_size: 8
+  epochs: 100
+  lr_G: 0.0002
+  lr_D: 0.0002
+  beta1: 0.5
+  beta2: 0.999
+  lr_decay_start: 50
+  save_every: 10
+  sample_every: 500
+
+loss:
+  gan_mode: "lsgan"
+  lambda_gan: 1.0
+  lambda_l1: 100.0
+  lambda_sobel: 0.0
+  lambda_vgg: 5.0
+
+paths:
+  checkpoints: "experiments/E1_baseline/checkpoints"
+  logs: "experiments/E1_baseline/logs"
+  samples: "experiments/E1_baseline/samples"
