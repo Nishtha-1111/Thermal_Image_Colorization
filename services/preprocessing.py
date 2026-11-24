@@ -95,12 +95,18 @@ def preprocess_for_model(bgr: np.ndarray,
 
     gray_full  = to_grayscale(bgr)
     gray_rs    = cv2.resize(gray_full, (size, size), interpolation=cv2.INTER_AREA)
+    # Canonical preprocessing matching training exactly:
+    # 1. Thermal image -> Grayscale -> Resize (256x256) -> [-1, 1] tensor
+    # 2. Canny edge pipeline -> Computed directly on resized thermal image -> [0, 1] tensor
+    # NOTE: CLAHE / NLM are NOT applied to the generator input tensors to prevent train/inference mismatch.
+    edge_info  = extract_edges_visual(gray_rs)
+    soft_edge  = extract_edges(gray_rs)   # canonical float [0,1] on resized thermal
+
+    # Optional traditional enhancements for comparison/inspection only
     denoised   = denoise(gray_rs, h=denoise_h)
     clahe_out  = apply_clahe(denoised, clip=clahe_clip)
-    edge_info  = extract_edges_visual(clahe_out)
-    soft_edge  = extract_edges(clahe_out)   # canonical float [0,1]
 
-    # Normalize to [-1, 1] matching training
+    # Normalize to [-1, 1] matching training exactly
     ir_t   = torch.from_numpy(gray_rs.astype(np.float32) / 127.5 - 1.0) \
                    .unsqueeze(0).unsqueeze(0)   # (1,1,H,W)
     edge_t = torch.from_numpy(soft_edge) \

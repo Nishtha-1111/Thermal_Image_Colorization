@@ -171,13 +171,24 @@ def train_ablation(cfg_path: str, resume: str = None):
     else:
         img_size = tuple(img_size)
 
-    train_ds = LLVIPDataset(
-        ir_dir=cfg["dataset"]["train_ir"],
-        vis_dir=cfg["dataset"]["train_vis"],
-        ann_dir=cfg["dataset"].get("annotations"),
-        image_size=img_size,
-        augment=True,
-    )
+    pairs_csv = cfg["dataset"].get("pairs_csv", "datasets/llvip_pairs.csv")
+    if os.path.exists(pairs_csv):
+        train_ds = LLVIPDataset(
+            csv_file=pairs_csv,
+            split="train",
+            ann_dir=cfg["dataset"].get("annotations"),
+            image_size=img_size,
+            augment=True,
+        )
+        logger.info(f"Loaded train partition from {pairs_csv} ({len(train_ds)} samples)")
+    else:
+        train_ds = LLVIPDataset(
+            ir_dir=cfg["dataset"]["train_ir"],
+            vis_dir=cfg["dataset"]["train_vis"],
+            ann_dir=cfg["dataset"].get("annotations"),
+            image_size=img_size,
+            augment=True,
+        )
     train_loader = DataLoader(
         train_ds,
         batch_size=cfg["training"]["batch_size"],

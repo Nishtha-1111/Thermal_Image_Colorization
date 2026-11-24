@@ -51,13 +51,23 @@ def infer_single(netG, device, ir_path, out_path, img_size=(256, 256)):
 
 
 def infer_dataset(netG, device, cfg, max_samples=None):
-    ds = LLVIPDataset(
-        ir_dir=cfg["dataset"]["test_ir"],
-        vis_dir=cfg["dataset"]["test_vis"],
-        image_size=tuple(cfg["dataset"]["image_size"]),
-        augment=False,
-        max_samples=max_samples,
-    )
+    pairs_csv = cfg["dataset"].get("pairs_csv")
+    if pairs_csv and os.path.exists(pairs_csv):
+        ds = LLVIPDataset(
+            csv_file=pairs_csv,
+            split="test",
+            image_size=tuple(cfg["dataset"]["image_size"]),
+            augment=False,
+            max_samples=max_samples,
+        )
+    else:
+        ds = LLVIPDataset(
+            ir_dir=cfg["dataset"]["test_ir"],
+            vis_dir=cfg["dataset"]["test_vis"],
+            image_size=tuple(cfg["dataset"]["image_size"]),
+            augment=False,
+            max_samples=max_samples,
+        )
     out_dir = os.path.join(cfg["paths"]["results_pix2pix"], "test_gen")
     os.makedirs(out_dir, exist_ok=True)
 

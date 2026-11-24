@@ -4,6 +4,7 @@
 
 dataset:
   root: "LLVIP"                     # relative to project root
+  pairs_csv: "datasets/llvip_pairs.csv" # 90% train (10,823), 10% val (1,202), test (3,463)
   train_ir: "LLVIP/infrared/train"
   train_vis: "LLVIP/visible/train"
   test_ir:  "LLVIP/infrared/test"

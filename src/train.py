@@ -154,13 +154,34 @@ def train(cfg_path: str, resume: str = None):
     logger.info(f"Config: {cfg_path}")
 
     # --- Datasets & Loaders ---
-    train_ds = LLVIPDataset(
-        ir_dir=cfg["dataset"]["train_ir"],
-        vis_dir=cfg["dataset"]["train_vis"],
-        ann_dir=cfg["dataset"]["annotations"],
-        image_size=tuple(cfg["dataset"]["image_size"]),
-        augment=True,
-    )
+    pairs_csv = cfg["dataset"].get("pairs_csv")
+    if pairs_csv and os.path.exists(pairs_csv):
+        train_ds = LLVIPDataset(
+            csv_file=pairs_csv,
+            split="train",
+            ann_dir=cfg["dataset"].get("annotations"),
+            image_size=tuple(cfg["dataset"]["image_size"]),
+            augment=True,
+        )
+        val_ds = LLVIPDataset(
+            csv_file=pairs_csv,
+            split="validation",
+            image_size=tuple(cfg["dataset"]["image_size"]),
+            augment=False,
+        )
+        logger.info(f"Loaded dataset from CSV split: {pairs_csv}")
+        logger.info(f"Train partition: {len(train_ds)} samples (90% of official train)")
+        logger.info(f"Validation partition: {len(val_ds)} samples (10% of official train)")
+    else:
+        train_ds = LLVIPDataset(
+            ir_dir=cfg["dataset"]["train_ir"],
+            vis_dir=cfg["dataset"]["train_vis"],
+            ann_dir=cfg["dataset"].get("annotations"),
+            image_size=tuple(cfg["dataset"]["image_size"]),
+            augment=True,
+        )
+        val_ds = None
+
     train_loader = DataLoader(
         train_ds,
         batch_size=cfg["training"]["batch_size"],
@@ -169,6 +190,14 @@ def train(cfg_path: str, resume: str = None):
         pin_memory=True,
         drop_last=True,
     )
+    val_loader = DataLoader(
+        val_ds,
+        batch_size=cfg["training"]["batch_size"],
+        shuffle=False,
+        num_workers=cfg["dataset"]["num_workers"],
+        pin_memory=True,
+    ) if val_ds is not None else None
+
     logger.info(f"Train samples: {len(train_ds)}  |  Batches/epoch: {len(train_loader)}")
 
     # --- Models ---
