@@ -1,0 +1,59 @@
+============================================================
+STEP 1 — Organising evaluation_final folders
+============================================================
+  traditional_enhanced: 3463 files
+  traditional_edge: 3463 files
+  pix2pix: 3463 files
+
+Ground-truth images: 3463
+
+============================================================
+STEP 2 — Computing metrics
+============================================================
+
+  [traditional_enhanced]
+  3463 files found
+  500/3463  psnr=11.53  ssim=0.2332  f1=0.3593  (19s)
+  1000/3463  psnr=11.53  ssim=0.2344  f1=0.3588  (51s)
+  1500/3463  psnr=11.99  ssim=0.2413  f1=0.3532  (80s)
+  2000/3463  psnr=12.10  ssim=0.2343  f1=0.3482  (108s)
+  2500/3463  psnr=11.80  ssim=0.2160  f1=0.3212  (136s)
+  3000/3463  psnr=11.53  ssim=0.1976  f1=0.3048  (164s)
+  3463/3463  psnr=11.53  ssim=0.2026  f1=0.3171  (191s)
+  DONE  n=3463 skipped=0  PSNR=11.529  SSIM=0.2026  EdgeF1=0.3171
+
+  [traditional_edge]
+  3463 files found
+  500/3463  psnr=11.49  ssim=0.2330  f1=0.3577  (29s)
+  1000/3463  psnr=11.47  ssim=0.2335  f1=0.3585  (57s)
+  1500/3463  psnr=11.92  ssim=0.2402  f1=0.3544  (84s)
+  2000/3463  psnr=12.03  ssim=0.2331  f1=0.3504  (112s)
+  2500/3463  psnr=11.69  ssim=0.2138  f1=0.3230  (139s)
+  3000/3463  psnr=11.39  ssim=0.1948  f1=0.3071  (166s)
+  3463/3463  psnr=11.40  ssim=0.2002  f1=0.3197  (190s)
+  DONE  n=3463 skipped=0  PSNR=11.4007  SSIM=0.2002  EdgeF1=0.3197
+
+  [pix2pix]
+  3463 files found
+  500/3463  psnr=12.60  ssim=0.2350  f1=0.2861  (21s)
+  1000/3463  psnr=12.96  ssim=0.2477  f1=0.2781  (42s)
+  1500/3463  psnr=13.70  ssim=0.2714  f1=0.2585  (63s)
+  2000/3463  psnr=14.08  ssim=0.2878  f1=0.2470  (84s)
+  2500/3463  psnr=14.07  ssim=0.2847  f1=0.2391  (106s)
+  3000/3463  psnr=14.13  ssim=0.2732  f1=0.2301  (126s)
+  3463/3463  psnr=13.86  ssim=0.2659  f1=0.2359  (144s)
+  DONE  n=3463 skipped=0  PSNR=13.8644  SSIM=0.2659  EdgeF1=0.2359
+
+============================================================
+FINAL COMPARISON TABLE
+============================================================
+Method                       PSNR(dB)     SSIM    Edge-F1
+------------------------------------------------------------
+traditional_enhanced          11.5290   0.2026     0.3171
+traditional_edge              11.4007   0.2002     0.3197
+pix2pix                       13.8644   0.2659     0.2359
+============================================================
+
+CSV: C:\Users\Nishtha\Desktop\LLVIP\results\evaluation_final\per_image_metrics.csv
+JSON: C:\Users\Nishtha\Desktop\LLVIP\results\evaluation_final\summary_metrics.json
+COMPLETE

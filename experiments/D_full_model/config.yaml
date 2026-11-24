@@ -1,0 +1,64 @@
+# ============================================================
+# Experiment D: Full Proposed Model (Edge input + Sobel loss)
+# ============================================================
+
+dataset:
+  root: "LLVIP"
+  train_ir: "LLVIP/infrared/train"
+  train_vis: "LLVIP/visible/train"
+  test_ir: "LLVIP/infrared/test"
+  test_vis: "LLVIP/visible/test"
+  annotations: "LLVIP/Annotations"
+  image_size: [256, 256]
+  num_workers: 4
+
+training:
+  epochs: 100
+  batch_size: 8
+  num_epochs: 100
+  lr_G: 0.0002
+  lr_D: 0.0002
+  beta1: 0.5
+  beta2: 0.999
+  lr_decay_start: 50
+  decay_epoch: 50
+  save_every: 10
+  log_every: 100
+  sample_every: 500
+
+  lambda_L1: 100.0
+  lambda_edge: 10.0
+  lambda_perceptual: 5.0
+
+model:
+  generator: "unet_256"
+  discriminator: "patch70"
+  ngf: 64
+  ndf: 64
+  in_channels_G: 2
+  in_channels_D: 5
+  out_channels_G: 3
+  norm: "batch"
+  use_dropout: true
+  gan_mode: "lsgan"
+
+loss:
+  gan_mode: "lsgan"
+  use_edge_loss: true
+  use_perceptual_loss: true
+  use_l1_loss: true
+
+experiment:
+  name: "D_full_model"
+  use_edge_input: true
+  seed: 42
+
+output:
+  checkpoint_dir: "experiments/D_full_model/checkpoints"
+  result_dir: "experiments/D_full_model/results"
+  log_dir: "experiments/D_full_model/logs"
+
+paths:
+  checkpoints: "experiments/D_full_model/checkpoints"
+  results_pix2pix: "experiments/D_full_model/results"
+  logs: "experiments/D_full_model/logs"

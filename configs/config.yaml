@@ -1,0 +1,49 @@
+# ============================================================
+# LLVIP Edge-Preserving Thermal-to-Visible Colorization Config
+# ============================================================
+
+dataset:
+  root: "LLVIP"                     # relative to project root
+  train_ir: "LLVIP/infrared/train"
+  train_vis: "LLVIP/visible/train"
+  test_ir:  "LLVIP/infrared/test"
+  test_vis: "LLVIP/visible/test"
+  annotations: "LLVIP/Annotations"
+  image_size: [256, 256]            # H x W fed to network (original 1024x1280)
+  num_workers: 4
+
+training:
+  batch_size: 8
+  num_epochs: 100
+  lr_G: 0.0002
+  lr_D: 0.0002
+  beta1: 0.5
+  beta2: 0.999
+  lambda_L1: 100.0            # weight of L1 loss
+  lambda_edge: 10.0           # weight of edge-preserving loss
+  lambda_perceptual: 5.0      # weight of VGG perceptual loss
+  decay_epoch: 50             # start LR linear decay from this epoch
+  save_every: 10              # save checkpoint every N epochs
+  log_every: 100              # log to console every N batches
+  sample_every: 500           # save sample images every N batches
+
+paths:
+  checkpoints: "checkpoints"
+  results_pix2pix: "results/pix2pix"
+  results_traditional: "results/traditional"
+  results_eval: "results/eval"
+  logs: "logs"
+
+model:
+  netG: "unet_256"            # generator architecture
+  netD: "patch70"             # discriminator (PatchGAN 70x70)
+  ngf: 64                     # generator base filters
+  ndf: 64                     # discriminator base filters
+  norm: "batch"               # batch | instance
+  use_dropout: true
+  gan_mode: "lsgan"           # lsgan | vanilla
+
+enhancement:
+  clahe_clip: 2.0
+  clahe_grid: [8, 8]
+  denoise_h: 10               # FastNlMeans filter strength

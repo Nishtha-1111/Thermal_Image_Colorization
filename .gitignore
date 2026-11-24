@@ -1,0 +1,30 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Large Datasets
+LLVIP/
+datasets/LLVIP/
+Thermal_Research/datasets/
+
+# Large Model Checkpoints
+*.pth
+*.pt
+*.ckpt
+
+# Heavy image outputs in results (keep json, csv, txt)
+results/pix2pix/
+results/traditional/
+results/evaluation_final/pix2pix/
+results/evaluation_final/traditional_*/
+experiments/*/checkpoints/
+experiments/*/results/samples/
+experiments/*/results/test_gen/
+Thermal_Research/**/checkpoints/*.pth
+Thermal_Research/**/results/samples/
+
+# Local cache & logs
+.streamlit/
+logs/*.log
+*.log

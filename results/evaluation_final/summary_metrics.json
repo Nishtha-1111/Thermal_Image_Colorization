@@ -1,0 +1,23 @@
+{
+  "traditional_enhanced": {
+    "n": 3463,
+    "skipped": 0,
+    "psnr": 11.529,
+    "ssim": 0.2026,
+    "edge_f1": 0.3171
+  },
+  "traditional_edge": {
+    "n": 3463,
+    "skipped": 0,
+    "psnr": 11.4007,
+    "ssim": 0.2002,
+    "edge_f1": 0.3197
+  },
+  "pix2pix": {
+    "n": 3463,
+    "skipped": 0,
+    "psnr": 13.8644,
+    "ssim": 0.2659,
+    "edge_f1": 0.2359
+  }
+}
