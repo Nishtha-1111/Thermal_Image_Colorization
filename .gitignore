@@ -1,30 +1,43 @@
-# Byte-compiled / optimized / DLL files
+# Byte-compiled / optimized
 __pycache__/
 *.py[cod]
 *$py.class
 
-# Large Datasets
+# Large Datasets & Archives
 LLVIP/
+KAIST/
+*.zip
+*.tar
+*.tar.gz
 datasets/LLVIP/
-Thermal_Research/datasets/
+Thermal_Research/
 
 # Large Model Checkpoints
 *.pth
 *.pt
 *.ckpt
+experiments/*/checkpoints/
+checkpoints/
 
-# Heavy image outputs in results (keep json, csv, txt)
+# Exclude Frontend files (as requested)
+app.py
+app_simple.py
+pages/
+components/
+assets/
+.streamlit/
+
+# Heavy local outputs & temporary files
+edge_inspection.jpg
+llvip_pairs.csv
+logs/
+*.log
+experiments/*/samples/
+experiments/*/logs/
+experiments/*/results/
+experiments/pilot_smoke_test/
+results/visual_comparisons/
+results/kaist_visual_comparisons/
 results/pix2pix/
 results/traditional/
-results/evaluation_final/pix2pix/
-results/evaluation_final/traditional_*/
-experiments/*/checkpoints/
-experiments/*/results/samples/
-experiments/*/results/test_gen/
-Thermal_Research/**/checkpoints/*.pth
-Thermal_Research/**/results/samples/
-
-# Local cache & logs
-.streamlit/
-logs/*.log
-*.log
+results/evaluation_final/
